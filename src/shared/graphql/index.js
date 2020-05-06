@@ -93,7 +93,7 @@ export const ORDER_QUERY = gql`
       id
       client {
         firstName
-        lastname
+        lastName
       }
       address
       deliveryDt

@@ -9,12 +9,13 @@ let Order = ({ order }) => {
         <Heading type="h4" text={`Order №${order.id}`} />
       </Card.Header>
       <Card.Body>
-        <Paragraph text={`Email: ${order.email}`} />
-        <Paragraph text={`Phone: ${order.phone}`} />
-        <Paragraph text={`Birthday: ${order.birthday}`} />
+        <Paragraph text={`Client: ${`${order.client.firstName} ${order.client.lastName}`}`} />
+        <Paragraph text={`Address: ${order.address}`} />
+        <Paragraph text={`Comment: ${order.comment}`} />
+        <Paragraph text={`Delivery at: ${new Date(order.deliveryDt).toDateString()}`} />
       </Card.Body>
       <Card.Body padding="none" stretch scrollable>
-        <OrdersTable orders={order.orders.items} />
+        <OrdersTable items={order.orderItems.items} />
       </Card.Body>
     </Card>
   );
