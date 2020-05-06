@@ -1,22 +1,13 @@
 import React from 'react';
 import { compose } from 'recompose';
-import * as R from 'ramda';
+
 import { Table, Dropdown, Icon, Menu, withModal } from '@8base/boost';
 
-import { Link } from 'react-router-dom';
+import OrderDeleteDialog from './ClientOrderDeleteDialog';
 
-import { graphql } from 'react-apollo';
-
-import * as sharedGraphQL from 'shared/graphql';
-
-import OrderDeleteDialog from './OrderDeleteDialog';
-import OrderCreateDialog from './OrderCreateDialog';
-
-let OrdersTable = ({ orders, openModal, closeModal }) => (
+let ClientOrdersTable = ({ orders, openModal, closeModal }) => (
   <Table>
-    <Table.Header columns="repeat(6, 1fr) 60px">
-      <Table.HeaderCell>ID</Table.HeaderCell>
-      <Table.HeaderCell>Client</Table.HeaderCell>
+    <Table.Header columns="repeat(4, 1fr) 60px">
       <Table.HeaderCell>Adress</Table.HeaderCell>
       <Table.HeaderCell>DeliveryDT</Table.HeaderCell>
       <Table.HeaderCell>Comment</Table.HeaderCell>
@@ -24,20 +15,9 @@ let OrdersTable = ({ orders, openModal, closeModal }) => (
       <Table.HeaderCell />
     </Table.Header>
 
-    <Table.Body
-      loading={orders.loading}
-      data={R.pathOr([], ['ordersList', 'items'], orders)}
-      action="Create Order"
-      onActionClick={() => openModal(OrderCreateDialog.id)}
-    >
+    <Table.Body data={orders}>
       {order => (
-        <Table.BodyRow columns="repeat(6, 1fr) 60px" key={order.id}>
-          <Table.BodyCell>
-            <Link to={`/orders/${order.id}`}>{order.id}</Link>
-          </Table.BodyCell>
-          <Table.BodyCell>
-            <Link to={`/clients/${order.client.id}`}>{`${order.client.firstName} ${order.client.lastName}`}</Link>
-          </Table.BodyCell>
+        <Table.BodyRow columns="repeat(4, 1fr) 60px" key={order.id}>
           <Table.BodyCell>{order.address}</Table.BodyCell>
           <Table.BodyCell>{order.deliveryDt}</Table.BodyCell>
           <Table.BodyCell>{order.comment}</Table.BodyCell>
@@ -69,9 +49,6 @@ let OrdersTable = ({ orders, openModal, closeModal }) => (
   </Table>
 );
 
-OrdersTable = compose(
-  withModal,
-  graphql(sharedGraphQL.ORDERS_LIST_QUERY, { name: 'orders' })
-)(OrdersTable);
+ClientOrdersTable = compose(withModal)(ClientOrdersTable);
 
-export default OrdersTable;
+export default ClientOrdersTable;

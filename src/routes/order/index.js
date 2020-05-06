@@ -6,9 +6,9 @@ import { Query } from 'react-apollo';
 
 import * as sharedGraphQL from 'shared/graphql';
 
-import { Client } from './Client';
+import { Order } from './Order';
 
-const ClientWrapper = props => {
+const OrderWrapper = props => {
   const {
     match: {
       params: { id },
@@ -16,16 +16,16 @@ const ClientWrapper = props => {
   } = props;
 
   return (
-    <Query query={sharedGraphQL.CLIENT_QUERY} variables={{ id }}>
+    <Query query={sharedGraphQL.ORDER_QUERY} variables={{ id }}>
       {({ data, loading }) => {
         if (loading) return 'Loading...';
-        if (!data) return 'Client not found';
-        return <Client client={data.client} />;
+        if (!data) return 'Order not found';
+        return <Order order={data.order} />;
       }}
     </Query>
   );
 };
 
-const ClientWrapperWithRouter = withRouter(ClientWrapper);
+const OrderWrapperWithRouter = withRouter(OrderWrapper);
 
-export default ClientWrapperWithRouter;
+export default OrderWrapperWithRouter;

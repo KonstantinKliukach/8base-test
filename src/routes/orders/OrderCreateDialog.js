@@ -15,6 +15,12 @@ const getUserOptions = (users = []) =>
     label: `${user.firstName} ${user.lastName}`,
   }));
 
+const getProductsOptions = (products = []) =>
+  products.map(product => ({
+    value: product.id,
+    label: product.name,
+  }));
+
 class OrderCreateDialog extends React.Component {
   static contextType = ModalContext;
 
@@ -24,6 +30,19 @@ class OrderCreateDialog extends React.Component {
         id: data.client,
       },
     };
+    data.orderItems = {
+      create: {
+        quantity: Number.parseInt(data.quantity),
+        product: {
+          connect: {
+            id: data.product,
+          },
+        },
+      },
+    };
+    delete data.quantity;
+    delete data.product;
+
     await this.props.productCreate({ variables: { data } });
     this.context.closeModal(CREATE_CLIENT_ID);
   };
@@ -46,11 +65,29 @@ class OrderCreateDialog extends React.Component {
                   placeholder="Select a client"
                   component={SelectField}
                   loading={loading}
-                  options={loading ? [] : getUserOptions(data?.clientsList.items)}
+                  options={loading || !data ? [] : getUserOptions(data.clientsList.items)}
                   stretch
                 />
               )}
             </Query>
+          </Grid.Box>
+          <Grid.Box>
+            <Query query={sharedGraphQL.PRODUCTS_LIST_QUERY}>
+              {({ data, loading }) => (
+                <Field
+                  name="product"
+                  label="Products"
+                  placeholder="Select a product"
+                  component={SelectField}
+                  loading={loading}
+                  options={loading || !data ? [] : getProductsOptions(data.productsList.items)}
+                  stretch
+                />
+              )}
+            </Query>
+          </Grid.Box>
+          <Grid.Box>
+            <Field name="quantity" label="Quantity" type="text" component={InputField} />
           </Grid.Box>
           <Grid.Box>
             <Field name="address" label="Adress" type="text" component={InputField} />
@@ -67,12 +104,7 @@ class OrderCreateDialog extends React.Component {
               label="Status"
               placeholder="Select a status"
               component={SelectField}
-              options={[
-                { label: 'Created', value: 'Created' },
-                { label: 'Active', value: 'Active' },
-                { label: 'Closed', value: 'Closed' },
-                { label: 'Cancelled', value: 'Cancelled' },
-              ]}
+              options={[{ label: 'Opened', value: 'Opened' }]}
               stretch
             />
           </Grid.Box>

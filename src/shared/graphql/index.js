@@ -87,6 +87,29 @@ export const PRODUCT_DELETE_MUTATION = gql`
   }
 `;
 
+export const ORDER_QUERY = gql`
+  query Order($id: ID!) {
+    order(id: $id) {
+      id
+      client {
+        firstName
+        lastname
+      }
+      address
+      deliveryDt
+      comment
+      orderItems {
+        items {
+          quantity
+          product {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const ORDERS_LIST_QUERY = gql`
   query OrdersList {
     ordersList {
@@ -102,6 +125,15 @@ export const ORDERS_LIST_QUERY = gql`
         deliveryDt
         comment
         status
+        orderItems {
+          items {
+            product {
+              id
+              name
+            }
+            quantity
+          }
+        }
       }
     }
   }
